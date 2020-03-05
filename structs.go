@@ -1,7 +1,7 @@
 package main
 
 type BrowserData struct {
-	ID                 string
+	ID                 int
 	Date               string
 	ClientID           string
 	DeviceCategory     string
@@ -10,4 +10,14 @@ type BrowserData struct {
 	Sessions           string
 	Transactions       string
 	TransactionRevenue string
+}
+
+type ClientModel struct {
+	ClientID string
+	Browser  string
+}
+
+type CSVRow struct {
+	Title string
+	Count string
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"os"
+	"strings"
 )
 
 func readCSVFiles(filenames []string) ([]BrowserData, error) {
@@ -15,17 +16,29 @@ func readCSVFiles(filenames []string) ([]BrowserData, error) {
 			return []BrowserData{}, csvLinesErr
 		}
 
-		for _, csvLine := range csvLines {
+		for i, csvLine := range csvLines {
+			if i == 0 {
+				continue
+			}
+
 			browserData := BrowserData{
-				ID:                 csvLine[0],
+				ID:                 i,
 				Date:               csvLine[1],
 				ClientID:           csvLine[2],
 				DeviceCategory:     csvLine[3],
-				Browser:            csvLine[4],
-				BrowserVersion:     csvLine[5],
 				Sessions:           csvLine[6],
 				Transactions:       csvLine[7],
 				TransactionRevenue: csvLine[8],
+			}
+
+			if strings.ToLower(csvLine[4]) == "safari" {
+				if strings.HasPrefix(csvLine[5], "12") || strings.HasPrefix(csvLine[5], "13") {
+					browserData.Browser = csvLine[4]
+					browserData.BrowserVersion = csvLine[5]
+				}
+			} else {
+				browserData.Browser = csvLine[4]
+				browserData.BrowserVersion = csvLine[5]
 			}
 
 			browserDataList = append(browserDataList, browserData)
