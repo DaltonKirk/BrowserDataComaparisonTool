@@ -175,6 +175,6 @@ func openFile(filename string) (*os.File, error) {
 	return fileToWrite, nil
 }
 
-func intToString(x int) (string) {
+func intToString(x int) string {
 	return strconv.Itoa(x)
 }
