@@ -24,24 +24,6 @@ func main() {
 		panic(filenamesErr)
 	}
 
-	day := strconv.Itoa(start.Day())
-	month := strconv.Itoa(int(start.Month()))
-	year := strconv.Itoa(start.Year())
-
-	hour := strconv.Itoa(start.Hour())
-	minutes := strconv.Itoa(start.Minute())
-	seconds := strconv.Itoa(start.Second())
-
-	dateString := day + "-" + month + "-" + year + "-" + hour + "-" + minutes + "-" + seconds
-
-	fileToWrite, fileToWrteError := openFile("results-" + dateString + ".csv")
-
-	if fileToWrteError != nil {
-		panic(fileToWrteError)
-	}
-
-	csvWriter := csv.NewWriter(fileToWrite)
-
 	browserData, browserDataErr := readCSVFiles(filenames)
 
 	if browserDataErr != nil {
@@ -85,14 +67,36 @@ func main() {
 	fmt.Println("\nTotal sessions: ", len(browserData))
 	fmt.Println("Returning users: ", len(groupQuery))
 
+	day := strconv.Itoa(start.Day())
+	month := strconv.Itoa(int(start.Month()))
+	year := strconv.Itoa(start.Year())
+
+	hour := strconv.Itoa(start.Hour())
+	minutes := strconv.Itoa(start.Minute())
+	seconds := strconv.Itoa(start.Second())
+
+	dateString := day + "-" + month + "-" + year + "-" + hour + "-" + minutes + "-" + seconds
+
+	fileToWrite, fileToWrteError := openFile("results-" + dateString + ".csv")
+
+	if fileToWrteError != nil {
+		panic(fileToWrteError)
+	}
+
+	defer fileToWrite.Close()
+
+	csvWriter := csv.NewWriter(fileToWrite)
+
+	defer csvWriter.Flush()
+
+	csvWriter.Write([]string{"Total sessions", strconv.Itoa(len(browserData))})
+	csvWriter.Write([]string{"Returning users", strconv.Itoa(len(groupQuery))})
+
 	for _, userCount := range userCountList {
 		fmt.Println("Returning "+userCount[0]+" users: ", userCount[1])
 
 		csvWriter.Write(userCount)
 	}
-
-	csvWriter.Flush()
-	fileToWrite.Close()
 
 	end := time.Since(start)
 
