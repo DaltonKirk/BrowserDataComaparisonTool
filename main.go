@@ -48,12 +48,12 @@ func main() {
 	}).ToSlice(&groupQuery)
 
 	// Get User data
-	chromeUserCount := []string{"Chrome", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "chrome"))}
-	safariUserCount := []string{"Safari 12+", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "safari"))}
-	ieUserCount := []string{"Internet Explorer", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "internet explorer"))}
-	edgeUserCount := []string{"Edge", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "edge"))}
-	firefoxUserCount := []string{"Firefox", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "firefox"))}
-	samsungUserCount := []string{"Samsung Internet", strconv.Itoa(getReturningUsersForBrowser(groupQuery, "samsung internet"))}
+	chromeUserCount := []string{"Chrome", intToString(getReturningUsersForBrowser(groupQuery, "chrome"))}
+	safariUserCount := []string{"Safari 12+", intToString(getReturningUsersForBrowser(groupQuery, "safari"))}
+	ieUserCount := []string{"Internet Explorer", intToString(getReturningUsersForBrowser(groupQuery, "internet explorer"))}
+	edgeUserCount := []string{"Edge", intToString(getReturningUsersForBrowser(groupQuery, "edge"))}
+	firefoxUserCount := []string{"Firefox", intToString(getReturningUsersForBrowser(groupQuery, "firefox"))}
+	samsungUserCount := []string{"Samsung Internet", intToString(getReturningUsersForBrowser(groupQuery, "samsung internet"))}
 
 	userCountList := [][]string{
 		chromeUserCount,
@@ -67,13 +67,13 @@ func main() {
 	fmt.Println("\nTotal sessions: ", len(browserData))
 	fmt.Println("Returning users: ", len(groupQuery))
 
-	day := strconv.Itoa(start.Day())
-	month := strconv.Itoa(int(start.Month()))
-	year := strconv.Itoa(start.Year())
+	day := intToString(start.Day())
+	month := intToString(int(start.Month()))
+	year := intToString(start.Year())
 
-	hour := strconv.Itoa(start.Hour())
-	minutes := strconv.Itoa(start.Minute())
-	seconds := strconv.Itoa(start.Second())
+	hour := intToString(start.Hour())
+	minutes := intToString(start.Minute())
+	seconds := intToString(start.Second())
 
 	dateString := day + "-" + month + "-" + year + "-" + hour + "-" + minutes + "-" + seconds
 
@@ -89,8 +89,8 @@ func main() {
 
 	defer csvWriter.Flush()
 
-	csvWriter.Write([]string{"Total sessions", strconv.Itoa(len(browserData))})
-	csvWriter.Write([]string{"Returning users", strconv.Itoa(len(groupQuery))})
+	csvWriter.Write([]string{"Total sessions", intToString(len(browserData))})
+	csvWriter.Write([]string{"Returning users", intToString(len(groupQuery))})
 
 	for _, userCount := range userCountList {
 		fmt.Println("Returning "+userCount[0]+" users: ", userCount[1])
@@ -173,4 +173,8 @@ func openFile(filename string) (*os.File, error) {
 	}
 
 	return fileToWrite, nil
+}
+
+func intToString(x int) (string) {
+	return strconv.Itoa(x)
 }
